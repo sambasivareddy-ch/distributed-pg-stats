@@ -4,7 +4,8 @@ import (
 	"fmt"
 
 	"github.com/sambasivareddy-ch/distributed-pg-stats/context"
-	"github.com/sambasivareddy-ch/distributed-pg-stats/ndvs"
+	"github.com/sambasivareddy-ch/distributed-pg-stats/helpers"
+	"github.com/sambasivareddy-ch/distributed-pg-stats/optimizer"
 
 	"github.com/spf13/cobra"
 )
@@ -59,27 +60,27 @@ func init() {
 
 func runOptimize() error {
 	// Use the joins and build the join edges
-	edges, err := ndvs.BuildJoinEdges(joins)
+	edges, err := optimizer.BuildJoinEdges(joins)
 	if err != nil {
 		return err
 	}
 
 	context.LoadSession()
 	config := context.GlobalConfigCtx
-	connection, _ := ndvs.ConnectToPostgres(config.Host, config.User, config.Database, config.Port)
+	connection, _ := helpers.ConnectToPostgres(config.Host, config.User, config.Database, config.Port)
 
-	ndvStats, err := ndvs.LoadNDVs(connection, false, config.MetaQuery)
+	ndvStats, err := helpers.LoadNDVs(connection, false, config.MetaQuery)
 	if err != nil {
 		return err
 	}
 
 	// Use the edges to estimate the cost of each join using NDVs
-	if err := ndvs.AssignJoinCosts(edges, ndvStats); err != nil {
+	if err := optimizer.AssignJoinCosts(edges, ndvStats); err != nil {
 		return err
 	}
 
 	// Now compute the join order based on cost-assigned edges
-	joinOrder := ndvs.ComputeJoinOrder(tables, edges)
+	joinOrder := optimizer.ComputeJoinOrder(tables, edges)
 
 	fmt.Println("Best Join Order:")
 	for i, t := range joinOrder {

@@ -1,4 +1,4 @@
-package ndvs
+package optimizer
 
 import (
 	"fmt"

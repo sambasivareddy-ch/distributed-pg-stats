@@ -1,4 +1,4 @@
-package ndvs
+package helpers
 
 import (
 	"database/sql"

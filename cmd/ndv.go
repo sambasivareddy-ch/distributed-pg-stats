@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/sambasivareddy-ch/distributed-pg-stats/context"
-	"github.com/sambasivareddy-ch/distributed-pg-stats/ndvs"
+	"github.com/sambasivareddy-ch/distributed-pg-stats/helpers"
 
 	"github.com/spf13/cobra"
 )
@@ -27,7 +27,7 @@ var ndvCmd = &cobra.Command{
 		config := context.GlobalConfigCtx
 
 		// Connect to Coordinator using the configured details
-		connection, err := ndvs.ConnectToPostgres(
+		connection, err := helpers.ConnectToPostgres(
 			config.Host,
 			config.User,
 			config.Database,
@@ -38,7 +38,7 @@ var ndvCmd = &cobra.Command{
 		}
 
 		// Load the NDVs
-		ndvs.LoadNDVs(connection, true, config.MetaQuery)
+		helpers.LoadNDVs(connection, true, config.MetaQuery)
 	},
 }
 
