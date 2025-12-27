@@ -126,3 +126,44 @@ func LoadNDVs(dbConn *sql.DB, refresh bool, metaquery string) (map[string]map[st
 
 	return stats, nil
 }
+
+// Helper function is to create a optimized_join_order table
+func CreateOptimizedJoinOrderTable(dbConn *sql.DB) error {
+	// Table schema
+	optimizedJoinOrderTable := `
+		CREATE TABLE IF NOT EXISTS optimized_join_order (
+			query_id int,
+			join_order text,
+			primary key(query_id)
+		);
+	`
+
+	_, err := dbConn.Exec(optimizedJoinOrderTable)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Created the table Optimized JoinOrder table")
+
+	return nil
+}
+
+func InsertOptimizedJoinOrderIntoMeta(dbConn *sql.DB, queryId int, joinOrder string) error {
+	// INSERT query
+	insertQuery := `
+		INSERT INTO optimized_join_order 
+		VALUES ($1, $2) ON CONFLICT (query_id)
+		DO UPDATE
+		SET
+			join_order = EXCLUDED.join_order;
+	`
+
+	_, err := dbConn.Exec(insertQuery, queryId, joinOrder)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Insert the Join order into Meta table")
+
+	return nil
+}

@@ -39,6 +39,9 @@ var ndvCmd = &cobra.Command{
 
 		// Load the NDVs
 		helpers.LoadNDVs(connection, true, config.MetaQuery)
+
+		// Create the optimized_join_order
+		helpers.CreateOptimizedJoinOrderTable(connection)
 	},
 }
 

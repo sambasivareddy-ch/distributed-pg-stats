@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/sambasivareddy-ch/distributed-pg-stats/context"
 	"github.com/sambasivareddy-ch/distributed-pg-stats/helpers"
@@ -85,6 +86,10 @@ func runOptimize() error {
 	fmt.Println("Best Join Order:")
 	for i, t := range joinOrder {
 		fmt.Printf("%d. %s\n", i+1, t)
+	}
+
+	if err := helpers.InsertOptimizedJoinOrderIntoMeta(connection, 1, strings.Join(joinOrder, ",")); err != nil {
+		fmt.Println(err)
 	}
 
 	return nil
