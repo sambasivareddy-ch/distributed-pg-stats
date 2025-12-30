@@ -1,5 +1,5 @@
-# distributed-pg-stats
-`distributed-pg-stats` is a **statistics-driven optimizer CLI for distributed PostgreSQL systems**.   
+# pg_join_optimizer
+`pg_join_optimizer` is a **statistics-driven optimizer CLI for PostgreSQL systems**.   
 
 It collects **global cardinality statistics (NDV – Number of Distinct Values)** across tables and uses them to **compute optimized join orders** that reduce fan-out, result sizes, and expensive joins. This project is designed to work **outside PostgreSQL’s core planner**, acting as a **optimization layer**.
 
@@ -31,7 +31,7 @@ It collects **global cardinality statistics (NDV – Number of Distinct Values)*
 This is the **first command you must run**.
 ### Usage
 ```bash
-./distributed-pg-stats \
+./pg_join_optimizer \
   -d database_name \
   -H host \
   -P port \
@@ -50,7 +50,7 @@ This is the **first command you must run**.
 This command computes global NDV (Number of Distinct Values) for each table and column discovered in the config.
 ### Usage
 ```bash
-./distributed-pg-stats load-ndv
+./pg_join_optimizer load-ndv
 ```
 **What this does**
 - Reads config.json
@@ -63,7 +63,7 @@ This command computes global NDV (Number of Distinct Values) for each table and 
 This command uses global NDV stats to compute the best join order for a query.
 ### Usage
 ```bash
-./distributed-pg-stats optimize \
+./pg_join_optimizer \
   --table table1 \
   --table table2 \
   --table table3 \
